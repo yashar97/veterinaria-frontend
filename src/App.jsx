@@ -11,6 +11,8 @@ import { PacientesProvider } from './context/PacientesContext'
 
 const App = () => {
 
+    console.log('Estamos en la rama "opcion"');
+
     return (
         <BrowserRouter>
             <AuthProvider>
