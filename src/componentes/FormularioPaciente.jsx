@@ -1,6 +1,5 @@
 import { useState } from "react"
 import Alerta from './Alerta'
-import axios from "axios";
 import usePacientes from "../hooks/usePacientes";
 import Swal from 'sweetalert2'
 import uuid4 from "uuid4";
@@ -9,7 +8,7 @@ import uuid4 from "uuid4";
 
 const FormularioPaciente = () => {
 
-    const { setPacientes } = usePacientes();
+    const { setPacientes, pacientes } = usePacientes();
 
     const [nombre, setNombre] = useState('');
     const [propietario, setPropietario] = useState('');
@@ -30,34 +29,23 @@ const FormularioPaciente = () => {
             return;
         }
 
-        try {
+        let pa = JSON.parse(localStorage.getItem('pacientes'));
 
-            const url = `${import.meta.env.VITE_BACKEND_URL}/api/pacientes`;
-            const token = localStorage.getItem('veterinaria-auth-token');
+        pa = [...pa, { id: uuid4(), nombre, propietario, telefono, sintomas }];
+        localStorage.setItem('pacientes', JSON.stringify(pa));
+        setPacientes(pa);
+        Swal.fire({
+            position: "top-end",
+            icon: "success",
+            title: "Paciente agregado",
+            showConfirmButton: false,
+            timer: 1500
+        });
 
-            const { data } = await axios.post(url, { nombre, propietario, telefono, sintomas }, {
-                headers: {
-                    Authorization: `Bearer ${token}`
-                }
-            });
-
-            setPacientes(data);
-            setNombre('');
-            setPropietario('');
-            setTelefono('');
-            setSintomas('');
-
-            Swal.fire({
-                position: "top-end",
-                icon: "success",
-                title: "Paciente agregado",
-                showConfirmButton: false,
-                timer: 1500
-            });
-
-        } catch (error) {
-            console.log(error);
-        }
+        setNombre('');
+        setPropietario('');
+        setTelefono('');
+        setSintomas('');
     }
 
     return (

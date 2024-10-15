@@ -2,10 +2,35 @@ import { useEffect, useState } from "react";
 import FormularioPaciente from "../componentes/FormularioPaciente"
 import ListaPacientes from "../componentes/ListaPacientes"
 import usePacientes from "../hooks/usePacientes"
+import axios from "axios";
 
 const Administrador = () => {
 
-    const { pacientes, cargando } = usePacientes();
+    const { pacientes, setPacientes, cargando } = usePacientes();
+
+    useEffect(() => {
+
+        const obtenerPacientes = async () => {
+
+            const url = `${import.meta.env.VITE_BACKEND_URL}/api/pacientes`;
+            const token = localStorage.getItem('veterinaria-auth-token');
+
+            try {
+
+                const { data } = await axios(url, { headers: { Authorization: `Bearer ${token}` } });
+
+                localStorage.setItem('pacientes', JSON.stringify(data));
+                setPacientes(data);
+
+            } catch (error) {
+                console.log(error);
+            }
+
+        }
+
+        obtenerPacientes();
+
+    }, []);
 
     return (
         <div className='container mx-auto px-14 flex justify-between gap-5'>

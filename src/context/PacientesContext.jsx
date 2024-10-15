@@ -11,39 +11,17 @@ export const PacientesProvider = ({ children }) => {
     const [pacientes, setPacientes] = useState([]);
     const [cargando, setCargando] = useState(true);
 
-    useEffect(() => {
+    // useEffect(() => {
 
-        const obtenerPacientes = async () => {
+    //     if (!JSON.parse(localStorage.getItem('pacientes'))) {
+    //         localStorage.setItem('pacientes', JSON.stringify(pacientes));
+    //     } else {
+    //         setPacientes(JSON.parse(localStorage.getItem('pacientes')));
+    //     }
 
-            const url = `${import.meta.env.VITE_BACKEND_URL}/api/pacientes`;
-            const token = localStorage.getItem('veterinaria-auth-token');
 
-            if (!token) {
-                setPacientes([]);
-                return;
-            }
 
-            try {
-
-                const { data } = await axios(url, {
-                    headers: {
-                        Authorization: `Bearer ${token}`
-                    }
-                });
-
-                setPacientes(data);
-                setCargando(false);
-
-            } catch (error) {
-                setPacientes([]);
-                console.log(error);
-            }
-
-        }
-
-        obtenerPacientes();
-
-    }, [auth]);
+    // }, [auth]);
 
     return (
         <PacientesContext.Provider value={{ pacientes, setPacientes, cargando }}>

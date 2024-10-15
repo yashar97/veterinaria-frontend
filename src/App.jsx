@@ -5,19 +5,18 @@ import Registro from './paginasPublicas/Registro'
 import RecuperarPassword from './paginasPublicas/RecuperarPassword'
 import RutaProtegida from './layouts/RutaProtegida'
 import Administrador from './paginasPrivadas/Administrador'
-import { AuthProvider } from './context/AuthContext'
 import Perfil from './paginasPrivadas/Perfil'
+import { AuthProvider } from './context/AuthContext'
 import { PacientesProvider } from './context/PacientesContext'
 
 const App = () => {
-
-    console.log('Estamos en la rama "opcion"');
 
     return (
         <BrowserRouter>
             <AuthProvider>
                 <PacientesProvider>
                     <Routes>
+
                         <Route path='/' element={<AuthLayout />}>
                             <Route index element={<Login />} />
                             <Route path='registro' element={<Registro />} />

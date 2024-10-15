@@ -8,9 +8,6 @@ const Paciente = ({ paciente }) => {
 
     const eliminarPaciente = async id => {
 
-        const url = `${import.meta.env.VITE_BACKEND_URL}/api/pacientes/${id}`;
-        const token = localStorage.getItem('veterinaria-auth-token');
-
         Swal.fire({
             title: "Estás seguro?",
             text: "Se eliminará el registro de forma permanente.",
@@ -22,25 +19,22 @@ const Paciente = ({ paciente }) => {
             cancelButtonText: "Cancelar"
         }).then(async result => {
             if (result.isConfirmed) {
-                try {
 
-                    const { data } = await axios.delete(url, { headers: { Authorization: `Bearer ${token}` } });
+                let pa = JSON.parse(localStorage.getItem('pacientes'));
 
-                    setPacientes(data);
+                pa = pa.filter(paciente => paciente.id !== id);
 
-                    Swal.fire({
-                        position: "top-end",
-                        icon: "success",
-                        title: "Paciente eliminado",
-                        showConfirmButton: false,
-                        timer: 1500
-                    });
+                localStorage.setItem('pacientes', JSON.stringify(pa));
 
+                setPacientes(pa);
 
-
-                } catch (error) {
-                    console.log(error);
-                }
+                Swal.fire({
+                    position: "top-end",
+                    icon: "success",
+                    title: "Paciente eliminado",
+                    showConfirmButton: false,
+                    timer: 1500
+                });
 
             }
         });
@@ -69,7 +63,7 @@ const Paciente = ({ paciente }) => {
 
                 <div className='flex justify-between mt-5'>
                     <button className='bg-indigo-600 text-white py-2 px-10 font-bold rounded-md'>Editar</button>
-                    <button onClick={() => eliminarPaciente(paciente._id)} className='bg-red-700 text-white py-2 px-10 font-bold rounded-md'>Eliminar</button>
+                    <button onClick={() => eliminarPaciente(paciente.id)} className='bg-red-700 text-white py-2 px-10 font-bold rounded-md'>Eliminar</button>
                 </div>
             </div>
         </>

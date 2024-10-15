@@ -1,15 +1,35 @@
-import { Link, useNavigate } from "react-router-dom"
+import { json, Link, useNavigate } from "react-router-dom"
 import useAuth from "../hooks/useAuth"
+import axios from "axios";
 
 const Header = () => {
 
     const { setAuth } = useAuth();
     const navigate = useNavigate();
 
-    const cerrarSesion = () => {
-        setAuth({});
-        localStorage.removeItem('veterinaria-auth-token');
-        navigate('/');
+    const cerrarSesion = async () => {
+        const pacientes = JSON.parse(localStorage.getItem('pacientes'));
+        
+        try {
+            
+            const url = `${import.meta.env.VITE_BACKEND_URL}/api/pacientes`;
+            const token = localStorage.getItem('veterinaria-auth-token');
+            const { data } = await axios.post(url, pacientes, {
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
+            });
+
+            setAuth({});
+            navigate('/');
+            localStorage.removeItem('veterinaria-auth-token');
+            localStorage.removeItem('pacientes');
+
+        } catch (error) {
+            console.log(error.message);
+        }
+
+
     }
 
     return (
